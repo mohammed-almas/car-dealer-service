@@ -1,3 +1,5 @@
+# Car Dealer RESTful API Service
+
 ## Overview
 This project is a simple POC written in python with the help of FastAPI framework. It has implementations for CRUD operations for two models Dealer and Car which uses sqlite as the database and sqlalchemy as the ORM.
 
@@ -47,14 +49,14 @@ To see Redoc documentation for the project, go to following address:
 http://localhost:8000/redoc
 ```
 
-**API Routes for Dealer**
+### API Routes for Dealer
         POST - http://localhost:8000/dealer/
         GET - http://localhost:8000/dealer/
         GET - http://localhost:8000/dealer/{id}
         PUT - http://localhost:8000/dealer/{id}
         DELETE - http://localhost:8000/dealer/{id}
 
-**API Routes for Car**
+### API Routes for Car
         POST - http://localhost:8000/car/
         GET - http://localhost:8000/car/
         GET - http://localhost:8000/car/{id}
@@ -63,7 +65,9 @@ http://localhost:8000/redoc
 
 #### Example Request
 API Endpoint for fetching list of all dealers:
-    GET - /dealers
+```
+GET - /dealers
+```
 
 Command for calling the endpoint with request url:
 ```sh
