@@ -106,3 +106,4 @@ Response:
 - FastAPI provides asynchronous execution for APIs and type annotations along with good support for data validation.
 - It also provides documentation such as swagger without any external implementation.
 - I have used Pydantic because it provides default schema validation and used SQLAlchemy as the ORM.
+- A pre-populated sample database file with name sampleDatabase.db has been added to the project directory for taking reference on database values.
