@@ -66,7 +66,7 @@ http://localhost:8000/redoc
 #### Example Request
 API Endpoint for fetching list of all dealers:
 ```
-GET - /dealers
+GET - /dealer
 ```
 
 Command for calling the endpoint with request url:
