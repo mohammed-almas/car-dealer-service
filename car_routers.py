@@ -4,7 +4,7 @@ from database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
-from models import Car
+from models import Car, Dealer
 from schemas import CarSchema
 
 
@@ -16,17 +16,25 @@ router = APIRouter(prefix="/car")
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def add_car(request: CarSchema, db: Session = Depends(get_db)):
     """Creates a new car record"""
-    
+
+    # Validating if dealer id from new car data exists
+    dealer_id = request.dealer_id
+    dealer = db.query(Dealer).get(dealer_id)
+    if not dealer:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Dealer with ID {dealer_id} not found")
+
+    # Creating new car record
     try:
         created_car = Car(**request.model_dump())
         db.add(created_car)
         db.commit()
         db.refresh(created_car)
         return {"status": "success", "car": created_car}
-   
+
     except SQLAlchemyError as err:
         db.rollback()
-        logger.exception(f"An error occurred: {err}")
+        logger.exception("An error occurred: %s", err)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal server error")
 
@@ -38,13 +46,13 @@ async def get_cars(db: Session = Depends(get_db)):
     cars = db.query(Car).all()
     if not cars:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No Cars found")
+                            detail="No Cars found")
 
     return {"status": "success", "cars": cars}
 
 
 @router.get("/{id}", status_code=status.HTTP_200_OK)
-async def get_car(id: str, db: Session = Depends(get_db)):
+async def get_car(id: int, db: Session = Depends(get_db)):
     """Fetches information of a single car in the database based on the provided car id."""
 
     car = db.query(Car).get(id)
@@ -59,12 +67,21 @@ async def get_car(id: str, db: Session = Depends(get_db)):
 async def update_car(id: int, request: CarSchema, db: Session = Depends(get_db)):
     """Updates the information of a car based on the provided car id."""
 
+    # # Validating if provided car id exists
     get_car_query = db.query(Car).filter(Car.id == id)
     car = get_car_query.first()
     if not car:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Car with ID {id} not found")
 
+    # Validating if dealer id from incoming updated car data exists
+    dealer_id = request.dealer_id
+    dealer = db.query(Dealer).get(dealer_id)
+    if not dealer:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Dealer with ID {dealer_id} not found")
+
+    # Updating existing car record with incoming updated data
     try:
         get_car_query.update(request.model_dump())
         db.commit()
@@ -73,7 +90,7 @@ async def update_car(id: int, request: CarSchema, db: Session = Depends(get_db))
 
     except SQLAlchemyError as err:
         db.rollback()
-        logger.exception(f"An error occurred: {err}")
+        logger.exception("An error occurred: %s", err)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal server error")
 
@@ -93,6 +110,6 @@ async def delete_car_by_id(id: int, db: Session = Depends(get_db)):
 
     except SQLAlchemyError as err:
         db.rollback()
-        logger.exception(f"An error occurred: {err}")
+        logger.exception("An error occurred: %s", err)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal server error")

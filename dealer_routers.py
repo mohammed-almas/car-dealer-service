@@ -26,7 +26,7 @@ async def add_dealer(request: DealerSchema, db: Session = Depends(get_db)):
 
     except SQLAlchemyError as err:
         db.rollback()
-        logger.exception(f"An error occurred: {err}")
+        logger.exception("An error occurred: %s", err)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal server error")
 
@@ -44,7 +44,7 @@ async def get_dealers(db: Session = Depends(get_db)):
 
 
 @router.get("/{id}", status_code=status.HTTP_200_OK)
-async def get_dealer_by_id(id: str, db: Session = Depends(get_db)):
+async def get_dealer_by_id(id: int, db: Session = Depends(get_db)):
     """Fetches information of a single dealer in the database based on the provided dealer id."""
 
     dealer = db.query(Dealer).get(id)
@@ -73,7 +73,7 @@ async def update_dealer(id: int, request: DealerSchema, db: Session = Depends(ge
 
     except SQLAlchemyError as err:
         db.rollback()
-        logger.exception(f"An error occurred: {err}")
+        logger.exception("An error occurred: %s", err)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal server error")
     
@@ -93,6 +93,6 @@ async def delete_dealer_by_id(id: int, db: Session = Depends(get_db)):
 
     except SQLAlchemyError as err:
         db.rollback()
-        logger.exception(f"An error occurred: {err}")
+        logger.exception("An error occurred: %s", err)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal server error")

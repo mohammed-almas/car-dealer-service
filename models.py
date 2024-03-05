@@ -11,7 +11,7 @@ class Dealer(Base):
     address = Column(String(100), nullable=False)
     contact_no = Column(String(20), nullable=False)
 
-    cars = relationship("Car", back_populates="dealers")
+    cars = relationship("Car", back_populates="dealers", cascade="all, delete")
 
 
 class Car(Base):

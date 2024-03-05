@@ -63,7 +63,7 @@ http://localhost:8000/redoc
         PUT - http://localhost:8000/car/{id}
         DELETE - http://localhost:8000/car/{id}
 
-#### Example Request
+#### Example 1
 API Endpoint for fetching list of all dealers:
 ```
 GET - /dealer
@@ -71,7 +71,7 @@ GET - /dealer
 
 Command for calling the endpoint with request url:
 ```sh
-curl http://localhost:8000/dealer/ -H "Accept: application/json"
+curl -X GET http://localhost:8000/dealer/ -H "Content-Type: application/json"
 ```
 
 Response:
@@ -98,6 +98,53 @@ Response:
             "id": 3
         }
     ]
+}
+```
+
+#### Example 2
+API Endpoint for creating a new car record:
+```
+POST - /car
+```
+
+Request body example:
+```
+{
+    "model": "Hyundai Verna",
+    "price": 1800000,
+    "vehicle_type": "Sedan",
+    "fuel_type": "Petrol",
+    "transmission_type": "Manual",
+    "engine_no": "P3R56TG780",
+    "chasis_no": "CC345T1234",
+    "color": "Graphite Gray",
+    "mfg_year": 2023,
+    "dealer_id": 1
+}
+```
+
+Command for calling the endpoint with request url:
+```sh
+curl -X POST http://localhost:8000/car/ -H "Content-Type: application/json" -d '<request-body>'
+```
+
+Response:
+```sh
+{
+    "status": "success",
+    "car": {
+        "price": 1800000,
+        "model": "Hyundai Verna",
+        "fuel_type": "Petrol",
+        "engine_no": "P3R56TG780",
+        "color": "Graphite Gray",
+        "dealer_id": 1,
+        "id": 5,
+        "vehicle_type": "Sedan",
+        "transmission_type": "Manual",
+        "chasis_no": "CC345T1234",
+        "mfg_year": 2023
+    }
 }
 ```
 
