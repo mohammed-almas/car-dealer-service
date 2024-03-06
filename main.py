@@ -12,7 +12,7 @@ app = FastAPI()
 app.include_router(dealer_routers)
 app.include_router(car_routers)
 
-# Root address
 @app.get("/")
 def home():
+    """Function for root address"""
     return {"message": "Welcome to Car Dealer Service"}
